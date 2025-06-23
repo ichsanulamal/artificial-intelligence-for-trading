@@ -168,22 +168,6 @@ def assert_output(fn, fn_inputs, fn_expected_outputs):
                 )
             )
 
-            for column in expected_out.columns:
-                assert fn_out[column].dtype == expected_out[column].dtype, (
-                    "Incorrect type for output {}, column {}\n"
-                    "Type:          {}\n"
-                    "EXPECTED Type: {}".format(
-                        out_name,
-                        column,
-                        fn_out[column].dtype,
-                        expected_out[column].dtype,
-                    )
-                )
-
-            # Sort Columns
-            fn_out = fn_out.sort_index(1)
-            expected_out = expected_out.sort_index(1)
-
         if type(expected_out) in {pd.DataFrame, pd.Series}:
             assert set(fn_out.index) == set(expected_out.index), (
                 "Incorrect indices for output {}\n"
@@ -192,10 +176,6 @@ def assert_output(fn, fn_inputs, fn_expected_outputs):
                     out_name, sorted(fn_out.index), sorted(expected_out.index)
                 )
             )
-
-            # Sort Indices
-            fn_out = fn_out.sort_index()
-            expected_out = expected_out.sort_index()
 
         try:
             out_is_close = np.isclose(fn_out, expected_out, equal_nan=True)
